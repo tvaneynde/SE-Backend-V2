@@ -44,15 +44,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Azure Login
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CD0FB5E0A2C946B7813F38BF62E65033 }}
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: projectV2-backend
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CD0FB5E0A2C946B7813F38BF62E65033 }}
           package: ~/.m2/repository/com/projectV2/backend/courses-backend/0.0.1-SNAPSHOT/courses-backend-0.0.1-SNAPSHOT.jar
-        env:
-          AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CD0FB5E0A2C946B7813F38BF62E65033 }}
