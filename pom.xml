@@ -8,7 +8,7 @@
         <version>3.4.2</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>be.ucll.se.teamx</groupId>
+    <groupId>com.projectV2.backend</groupId>
     <artifactId>courses-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>courses-backend</name>
@@ -90,5 +90,13 @@
             </plugin>
         </plugins>
     </build>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/tvaneynde/SE-Backend-V2</url>
+        </repository>
+</distributionManagement>
+
 
 </project>
