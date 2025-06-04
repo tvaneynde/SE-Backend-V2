@@ -13,6 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -41,7 +42,7 @@ import java.util.List;
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @Configuration
-@EnableConfigurationProperties({CorsProperties.class, JwtProperties.class, H2ConsoleProperties.class})
+@EnableConfigurationProperties({ CorsProperties.class, JwtProperties.class, H2ConsoleProperties.class })
 @EnableMethodSecurity
 public class SecurityConfig {
     private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
@@ -58,47 +59,39 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()))
                 .authorizeHttpRequests(
-                        authorizeRequests -> authorizeRequests.anyRequest().permitAll()
-                )
+                        authorizeRequests -> authorizeRequests.anyRequest().permitAll())
                 .build();
     }
 
     @Bean
     @Order(1)
     public SecurityFilterChain securityFilterChain(HttpSecurity http,
-                                                   CorsProperties corsProperties) throws Exception {
+            CorsProperties corsProperties) throws Exception {
         return http
-                .authorizeHttpRequests(
-                        authorizeRequests ->
-                                authorizeRequests
-                                        // Allow all access to health check
-                                        .requestMatchers("/status").permitAll()
-                                        // Allow all access to error endpoints
-                                        .requestMatchers("/error/**").permitAll()
-                                        // Allow all to login and signup
-                                        .requestMatchers("/users/login", "/users/signup").permitAll()
-                                        // Allow OpenAPI access
-                                        .requestMatchers("/v3/api-docs/**").permitAll()
-                                        // Allow Swagger UI
-                                        .requestMatchers("/swagger-ui/**", "/swagger-ui.html").permitAll()
-                                        .anyRequest().authenticated())
+                .authorizeHttpRequests(authorizeRequests -> authorizeRequests
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/status", "/error/**", "/users/login", "/users/signup", "/v3/api-docs/**",
+                                "/swagger-ui/**", "/swagger-ui.html")
+                        .permitAll()
+                        .anyRequest().authenticated())
+
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable())
-                .oauth2ResourceServer(resourceServer ->
-                        resourceServer.jwt(Customizer.withDefaults()))
+                .oauth2ResourceServer(resourceServer -> resourceServer.jwt(Customizer.withDefaults()))
                 .build();
     }
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource(CorsProperties corsProperties) {
         final var configuration = new CorsConfiguration();
-        final var allowedOrigins = corsProperties.allowedOrigins().stream().map(URL::toString).toList();
+        final var allowedOrigins = corsProperties.allowedOrigins();
         configuration.setAllowedOrigins(allowedOrigins);
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
         final var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
+        log.info("Allowed CORS origins: {}", allowedOrigins);
         return source;
     }
 
@@ -116,7 +109,8 @@ public class SecurityConfig {
             return secretKeyGenerator.generateKey();
         } else {
             final var bytes = jwtProperties.secretKey().getBytes(StandardCharsets.UTF_8);
-            // Even though we're doing HMAC-SHA256, not AES, we still need to provide an algorithm
+            // Even though we're doing HMAC-SHA256, not AES, we still need to provide an
+            // algorithm
             return new SecretKeySpec(bytes, "AES");
         }
     }
@@ -138,7 +132,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 }
