@@ -7,6 +7,5 @@ import java.util.List;
 
 @ConfigurationProperties(prefix = "cors")
 public record CorsProperties(
-        @DefaultValue("http://localhost:8080") List<String> allowedOrigins
-) {
+        @DefaultValue("https://projectv2-frontend-gqfvcxacgnhxazf5.westeurope-01.azurewebsites.net") List<String> allowedOrigins) {
 }
