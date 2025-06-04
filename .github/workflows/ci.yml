@@ -27,11 +27,16 @@
 #         env:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-name: CI
+name: Build and Deploy
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main # or your release branch
+
+permissions:
+  contents: read
+  packages: write
 
 jobs:
   build:
@@ -45,10 +50,9 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: "21"
-          distribution: "temurin"
-          server-id: github # this must match <id> in pom.xml
-          settings-path: ${{ github.workspace }} # creates a settings.xml
-          token: ${{ secrets.GITHUB_TOKEN }}
+          distribution: temurin
+          server-id: github # Must match <id> in pom.xml
+          settings-path: ${{ github.workspace }} # Creates settings.xml with auth
 
       - name: Build and deploy with Maven
         run: mvn deploy -DskipTests
