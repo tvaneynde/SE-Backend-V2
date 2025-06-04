@@ -1,9 +1,9 @@
-name: CI - Build and Publish to GitHub Packages
+name: CI PIPELINE
 
 on:
   push:
     branches:
-      - main
+      - main # or your release branch
 
 jobs:
   build:
@@ -16,63 +16,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Java 21
+      - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: "temurin"
           java-version: "21"
+          distribution: microsoft
 
-      - name: Build and test with Maven
-        run: mvn clean verify
+      - name: Build and deploy with Maven
+        run: mvn clean install
+
+      - name: Delete previous package versions
+        uses: actions/delete-package-versions@v2
+        with:
+          package-name: com.projectV2.backend
+          owner: tvaneynde
+          repo: SE-Backend-V2
+          num-old-versions-to-delete: 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to GitHub Packages
         run: mvn deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-# name: Build and Deploy
 
-# on:
-#   push:
-#     branches:
-#       - main # or your release branch
-
-# jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     permissions:
-#       contents: read
-#       packages: write
-
-#     steps:
-#       - name: Checkout code
-#         uses: actions/checkout@v4
-
-#       - name: Set up Java
-#         uses: actions/setup-java@v4
-#         with:
-#           java-version: "21"
-#           distribution: microsoft
-
-#       - name: Build and deploy with Maven
-#         run: mvn clean install
-
-#       - name: Delete previous package versions
-#         uses: actions/delete-package-versions@v2
-#         with:
-#           package-name: com.projectV2.backend
-#           owner: tvaneynde
-#           repo: SE-Backend-V2
-#           num-old-versions-to-delete: 1
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#       - name: Publish to GitHub Packages
-#         run: mvn deploy
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#       - name: Upload artifact
-#         uses: actions/upload-artifact@v4
-#         with:
-#           name: backend-jar
-#           path: target/*.jar
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: target/*.jar
