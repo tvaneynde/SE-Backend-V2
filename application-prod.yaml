@@ -1,3 +1,6 @@
+spring:
+  profiles:
+    active: prod
 cors:
   allowed-origins:
     - "https://projectv2-frontend-gqfvcxacgnhxazf5.westeurope-01.azurewebsites.net"
