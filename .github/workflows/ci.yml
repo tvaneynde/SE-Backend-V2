@@ -48,6 +48,7 @@ jobs:
           distribution: "temurin"
           server-id: github # this must match <id> in pom.xml
           settings-path: ${{ github.workspace }} # creates a settings.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and deploy with Maven
         run: mvn deploy -DskipTests
