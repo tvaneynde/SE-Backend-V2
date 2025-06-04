@@ -36,11 +36,15 @@ jobs:
                   </servers>
                 </settings>" > ~/.m2/settings.xml
 
-      - name: Download JAR from GitHub Packages
+      - name: Download and copy JAR from GitHub Packages
         run: |
           mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.1:get \
             -Dartifact=com.projectV2.backend:courses-backend:0.0.1-SNAPSHOT \
             -DremoteRepositories=github::default::https://maven.pkg.github.com/tvaneynde/SE-Backend-V2
+
+          mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.1:copy \
+            -Dartifact=com.projectV2.backend:courses-backend:0.0.1-SNAPSHOT \
+            -DoutputDirectory=.
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -49,4 +53,4 @@ jobs:
         with:
           app-name: projectV2-backend
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CD0FB5E0A2C946B7813F38BF62E65033 }}
-          package: ~/.m2/repository/com/projectV2/backend/courses-backend/0.0.1-SNAPSHOT/courses-backend-0.0.1-SNAPSHOT.jar
+          package: courses-backend-0.0.1-SNAPSHOT.jar
