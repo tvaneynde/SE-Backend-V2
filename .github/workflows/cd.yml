@@ -1,0 +1,48 @@
+name: CD Pipeline
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: microsoft
+
+      - name: Configure Maven settings to access GitHub Packages
+        run: |
+          mkdir -p ~/.m2
+          echo "<settings>
+                  <servers>
+                    <server>
+                      <id>github</id>
+                      <username>${{ github.actor }}</username>
+                      <password>${{ secrets.GITHUB_TOKEN }}</password>
+                    </server>
+                  </servers>
+                </settings>" > ~/.m2/settings.xml
+
+      - name: Download JAR from GitHub Packages
+        run: mvn dependency:get -Dartifact=com.projectV2.backend:courses-backend:0.0.1-SNAPSHOT -DremoteRepositories=https://maven.pkg.github.com/tvaneynde/SE-Backend-V2
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: your-azure-app-name
+          package: ~/.m2/repository/com/projectV2/backend/courses-backend/0.0.1-SNAPSHOT/courses-backend-0.0.1-SNAPSHOT.jar
+        env:
+          AZURE_WEBAPP_PUBLISH_PROFILE: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_CD0FB5E0A2C946B7813F38BF62E65033 }}
