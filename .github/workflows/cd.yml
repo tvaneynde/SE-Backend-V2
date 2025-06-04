@@ -37,9 +37,8 @@ jobs:
                 </settings>" > ~/.m2/settings.xml
 
       - name: Download JAR from GitHub Packages
-        run: mvn dependency:get \
+        run: mvn org.apache.maven.plugins:maven-dependency-plugin:3.6.1:get \
           -Dartifact=com.projectV2.backend:courses-backend:0.0.1-SNAPSHOT \
-          -DrepoUrl=https://maven.pkg.github.com/tvaneynde/SE-Backend-V2 \
           -DremoteRepositories=github::default::https://maven.pkg.github.com/tvaneynde/SE-Backend-V2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
