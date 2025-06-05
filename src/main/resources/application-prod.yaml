@@ -3,7 +3,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://projectv2-postgres.postgres.database.azure.com:5432/database=courses?currentSchema=courses&ssl=require
+    url: jdbc:postgresql://projectv2-postgres.postgres.database.azure.com:5432/database=postgres?currentSchema=courses&ssl=require
     driver-class-name: org.postgresql.Driver
     username: tomasvaneynde
     password: Panda3212
