@@ -3,10 +3,10 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
+    url: jdbc:postgresql://projectv2-postgres.postgres.database.azure.com:5432/postgres?currentSchema=public&ssl=require
     driver-class-name: org.postgresql.Driver
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    username: tomasvaneynde
+    password: Panda3212
   jpa:
     hibernate:
       ddl-auto: none
