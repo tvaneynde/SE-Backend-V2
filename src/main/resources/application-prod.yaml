@@ -1,7 +1,7 @@
 spring:
   config:
     activate:
-      on-profile: production
+      on-profile: prod
   datasource:
     url: ${SPRING_DATASOURCE_URL}
     driver-class-name: org.postgresql.Driver
