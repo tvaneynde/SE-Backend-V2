@@ -1,10 +1,19 @@
 spring:
-  profiles:
-    active: prod
   datasource:
-    url: jdbc:h2:mem:courses
-    username: courses
-    password: courses123
+    url: jdbc:postgresql://projectv2-postgres.postgres.database.azure.com:5432/courses?currentSchema=prod_schema
+    username: tomasvaneynde@<projectv2-postgres.postgres.database.azure.com
+    password: Panda3212
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+
 cors:
   allowed-origins:
     - "https://projectv2-frontend-gqfvcxacgnhxazf5.westeurope-01.azurewebsites.net"
