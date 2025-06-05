@@ -1,7 +1,7 @@
 spring:
   datasource:
     url: jdbc:postgresql://projectv2-postgres.postgres.database.azure.com:5432/courses?currentSchema=public
-    username: tomasvaneynde@<projectv2-postgres.postgres.database.azure.com
+    username: tomasvaneynde@projectv2-postgres.postgres.database.azure.com
     password: Panda3212
     driver-class-name: org.postgresql.Driver
     hikari:
