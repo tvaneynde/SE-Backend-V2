@@ -23,7 +23,7 @@ jobs:
           distribution: microsoft
 
       - name: Build and deploy with Maven
-        run: mvn clean install -Dspring.profiles.active=dev
+        run: mvn clean install
 
       - name: Delete previous package versions
         uses: actions/delete-package-versions@v2
@@ -36,7 +36,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to GitHub Packages
-        run: mvn deploy -Dspring.profiles.active=dev
+        run: mvn deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

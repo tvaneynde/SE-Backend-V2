@@ -14,3 +14,6 @@ spring:
 
 jwt:
   secret-key: d2ViNC1ub3Qtc28tc2VjcmV0LWFjY2Vzcy1zZWNyZXQ=
+cors:
+  allowed-origins:
+    - "http://localhost:3000"
