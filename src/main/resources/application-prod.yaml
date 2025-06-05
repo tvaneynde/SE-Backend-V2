@@ -3,7 +3,7 @@ spring:
     activate:
       on-profile: prod
   datasource:
-    url: jdbc:postgresql://projectv2-postgres.postgres.database.azure.com:5432/postgres?currentSchema=public&ssl=require
+    url: jdbc:postgresql://projectv2-postgres.postgres.database.azure.com:5432/postgres?currentSchema=courses&ssl=require
     driver-class-name: org.postgresql.Driver
     username: tomasvaneynde
     password: Panda3212
@@ -17,4 +17,4 @@ spring:
     locations: classpath:db/migration
 
 jwt:
-  secret-key: ${JWT_SECRET_KEY}
+  secret-key: d2ViNC1ub3Qtc28tc2VjcmV0LWFjY2Vzcy1zZWNyZXQ=
