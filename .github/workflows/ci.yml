@@ -23,7 +23,7 @@ jobs:
           distribution: microsoft
 
       - name: Build and deploy with Maven
-        run: mvn clean install
+        run: mvn clean install -Dspring.profiles.active=dev
 
       - name: Delete previous package versions
         uses: actions/delete-package-versions@v2
